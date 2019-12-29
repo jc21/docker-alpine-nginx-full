@@ -1,12 +1,11 @@
 FROM alpine:latest as builder
 
 ENV NGINX_VERSION=1.17.7
-ENV OPENSSL_VERSION=1.1.1d
 
-RUN apk update \
-	&& apk add --no-cache --upgrade bash curl ncurses openssl \
-	&& apk add --update gcc g++ musl-dev \
-	&& rm -rf /var/cache/apk/*
+RUN apk update
+RUN apk add --no-cache --upgrade bash curl ncurses openssl
+RUN apk add --update gcc g++ musl-dev make pcre pcre-dev openssl-dev zlib-dev
+RUN apk add build-base
 
 # Nginx build
 WORKDIR /tmp
@@ -32,7 +31,6 @@ RUN ./configure \
 	--user=nginx \
 	--group=nginx \
 	--with-compat \
-	--with-file-aio \
 	--with-threads \
 	--with-http_addition_module \
 	--with-http_auth_request_module \
@@ -58,15 +56,6 @@ RUN ./configure \
 
 RUN make
 
-# Openssl build
-WORKDIR /tmp
-RUN wget "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz"
-RUN tar -xzf openssl-${OPENSSL_VERSION}.tar.gz
-RUN mv /tmp/openssl-${OPENSSL_VERSION} /tmp/openssl
-WORKDIR /tmp/openssl
-RUN ./config
-RUN make test
-
 
 #############
 # Final Image
@@ -76,20 +65,14 @@ FROM alpine:latest
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
 RUN apk update \
-	&& apk add curl bash figlet ncurses openssl \
+	&& apk add curl bash figlet ncurses openssl pcre zlib \
+	&& apk add --update make \
 	&& rm -rf /var/cache/apk/*
-
-# Openssl custom
-COPY --from=builder /tmp/openssl /tmp/openssl
-ADD .bashrc /root/.bashrc
-WORKDIR /tmp/openssl
-RUN make install \
-	&& ldconfig \
-	&& openssl version \
-	&& rm -rf /tmp/openssl
 
 # Copy nginx build from first image
 COPY --from=builder /tmp/nginx /tmp/nginx
 WORKDIR /tmp/nginx
 RUN make install \
 	&& rm -rf /tmp/nginx
+
+RUN apk del make
