@@ -17,7 +17,7 @@ docker buildx build \
 	--platform linux/amd64,linux/arm64,linux/arm/7 \
 	--progress plain \
 	--pull \
-	-f docker/Dockerfile \
+	-f Dockerfile \
 	$@ \
 	.
 
