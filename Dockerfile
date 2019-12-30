@@ -1,5 +1,7 @@
 FROM alpine:latest as builder
 
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
 ENV NGINX_VERSION=1.17.7
 
 RUN apk update
