@@ -64,6 +64,8 @@ RUN make
 FROM alpine:latest
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
+ENV NGINX_VERSION=1.17.7
+
 RUN apk update \
 	&& apk add curl bash figlet ncurses openssl pcre zlib \
 	&& apk add --update make \

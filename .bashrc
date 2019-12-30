@@ -15,5 +15,4 @@ alias h='cd ~;clear;'
 echo -e -n '\E[1;34m'
 figlet -w 120 "alpine-nginx-full"
 echo -e "\E[1;36mNginx Version \E[1;32m${NGINX_VERSION}\E[0m"
-echo -e "\E[1;36mOpenSSL Version \E[1;32m${OPENSSL_VERSION}\E[0m"
 echo
