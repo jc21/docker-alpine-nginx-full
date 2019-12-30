@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 CYAN='\E[1;36m'
 YELLOW='\E[1;33m'
