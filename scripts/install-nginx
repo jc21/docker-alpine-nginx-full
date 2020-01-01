@@ -7,7 +7,7 @@ RESET='\E[0m'
 echo -e "${CYAN}Installing nginx: ${YELLOW}${*}${RESET}"
 
 cd /tmp/nginx
-make install \
+make install
 rm -rf /tmp/nginx
 
 echo -e "${CYAN}Nginx install completed${RESET}"
