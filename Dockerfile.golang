@@ -1,0 +1,25 @@
+FROM --platform=${TARGETPLATFORM:-linux/amd64} golang:1.13.5-alpine
+LABEL maintainer="Jamie Curnow <jc@jc21.com>"
+
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+ENV NGINX_VERSION=1.17.7
+
+RUN apk update \
+	&& update-ca-certificates \
+	&& apk add --no-cache --upgrade bash curl ncurses openssl \
+	&& apk add --update gcc g++ musl-dev make pcre pcre-dev openssl-dev zlib-dev figlet zlib \
+	&& apk add build-base git npm nodejs yarn \
+	&& rm -rf /var/cache/apk/*
+
+# Nginx build
+ADD ./scripts/build-nginx /tmp/build-nginx
+ADD ./scripts/install-nginx /tmp/install-nginx
+RUN /tmp/build-nginx && /tmp/install-nginx
+
+WORKDIR /root
+
+# Gotools
+RUN echo "TARGETPLATFORM is: $TARGETPLATFORM"
+RUN if [ "$TARGETPLATFORM" == "" ] || [ "$TARGETPLATFORM" == "linux/amd64" ]; then wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.21.0; fi
+RUN go get -u github.com/kyoh86/richgo

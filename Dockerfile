@@ -10,54 +10,8 @@ RUN apk add --update gcc g++ musl-dev make pcre pcre-dev openssl-dev zlib-dev
 RUN apk add build-base
 
 # Nginx build
-WORKDIR /tmp
-RUN wget "http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz"
-RUN tar -xzf nginx-${NGINX_VERSION}.tar.gz
-RUN mv /tmp/nginx-${NGINX_VERSION} /tmp/nginx
-WORKDIR /tmp/nginx
-
-RUN ./configure \
-	--prefix=/etc/nginx \
-	--sbin-path=/usr/sbin/nginx \
-	--modules-path=/usr/lib/nginx/modules \
-	--conf-path=/etc/nginx/nginx.conf \
-	--error-log-path=/var/log/nginx/error.log \
-	--http-log-path=/var/log/nginx/access.log \
-	--pid-path=/var/run/nginx.pid \
-	--lock-path=/var/run/nginx.lock \
-	--http-client-body-temp-path=/var/cache/nginx/client_temp \
-	--http-proxy-temp-path=/var/cache/nginx/proxy_temp \
-	--http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
-	--http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
-	--http-scgi-temp-path=/var/cache/nginx/scgi_temp \
-	--user=nginx \
-	--group=nginx \
-	--with-compat \
-	--with-threads \
-	--with-http_addition_module \
-	--with-http_auth_request_module \
-	--with-http_dav_module \
-	--with-http_flv_module \
-	--with-http_gunzip_module \
-	--with-http_gzip_static_module \
-	--with-http_mp4_module \
-	--with-http_random_index_module \
-	--with-http_realip_module \
-	--with-http_secure_link_module \
-	--with-http_slice_module \
-	--with-http_ssl_module \
-	--with-http_stub_status_module \
-	--with-http_sub_module \
-	--with-http_v2_module \
-	--with-mail \
-	--with-mail_ssl_module \
-	--with-stream \
-	--with-stream_realip_module \
-	--with-stream_ssl_module \
-	--with-stream_ssl_preread_module
-
-RUN make
-
+ADD ./scripts/build-nginx /tmp/build-nginx
+RUN /tmp/build-nginx
 
 #############
 # Final Image
@@ -75,8 +29,7 @@ RUN apk update \
 
 # Copy nginx build from first image
 COPY --from=builder /tmp/nginx /tmp/nginx
-WORKDIR /tmp/nginx
-RUN make install \
-	&& rm -rf /tmp/nginx
-
-RUN apk del make
+ADD ./scripts/install-nginx /tmp/install-nginx
+RUN /tmp/install-nginx \
+	&& rm -f /tmp/install-nginx \
+	&& apk del make
