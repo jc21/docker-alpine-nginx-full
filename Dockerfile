@@ -27,6 +27,8 @@ RUN apk update \
 	&& apk add --update make \
 	&& rm -rf /var/cache/apk/*
 
+ADD ./.bashrc /root/.bashrc
+
 # Copy nginx build from first image
 COPY --from=builder /tmp/nginx /tmp/nginx
 ADD ./scripts/install-nginx /tmp/install-nginx

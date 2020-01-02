@@ -12,6 +12,8 @@ RUN apk update \
 	&& apk add build-base git npm nodejs yarn \
 	&& rm -rf /var/cache/apk/*
 
+ADD ./.bashrc /root/.bashrc
+
 # Nginx build
 ADD ./scripts/build-nginx /tmp/build-nginx
 ADD ./scripts/install-nginx /tmp/install-nginx
