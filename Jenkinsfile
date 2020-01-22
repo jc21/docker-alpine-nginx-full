@@ -3,11 +3,13 @@ pipeline {
 		label 'docker-multiarch'
 	}
 	options {
-		buildDiscarder(logRotator(numToKeepStr: '10'))
+		buildDiscarder(logRotator(numToKeepStr: '5'))
 		disableConcurrentBuilds()
 	}
 	environment {
-		IMAGE = 'alpine-nginx-full'
+		IMAGE       = 'alpine-nginx-full'
+		BUILDX_NAME = "${IMAGE}_${GIT_BRANCH}_${BUILD_NUMBER}"
+
 	}
 	stages {
 		stage('MultiArch Build') {

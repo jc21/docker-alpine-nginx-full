@@ -1,17 +1,19 @@
 #!/bin/bash -e
 
+BLUE='\E[1;34m'
 CYAN='\E[1;36m'
 YELLOW='\E[1;33m'
+GREEN='\E[1;32m'
 RESET='\E[0m'
 
-echo -e "${CYAN}Building docker multiarch: ${YELLOW}${*}${RESET}"
+echo -e "${BLUE}❯ ${CYAN}Building docker multiarch: ${YELLOW}${*}${RESET}"
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${DIR}/.."
 
 # Buildx Builder
-docker buildx create --name alpine-nginx-full || echo
-docker buildx use alpine-nginx-full
+docker buildx create --name "${BUILDX_NAME:-alpine-nginx-full}" || echo
+docker buildx use "${BUILDX_NAME:-alpine-nginx-full}"
 
 docker buildx build \
 	--platform linux/amd64,linux/arm64,linux/arm/7 \
@@ -20,4 +22,6 @@ docker buildx build \
 	$@ \
 	.
 
-echo -e "${CYAN}Multiarch build completed${RESET}"
+docker buildx rm "${BUILDX_NAME:-npm}"
+
+echo -e "${BLUE}❯ ${GREEN}Multiarch build Complete${RESET}"
