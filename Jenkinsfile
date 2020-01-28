@@ -25,6 +25,19 @@ pipeline {
 				}
 			}
 		}
+		stage('Node Build') {
+			when {
+				branch 'master'
+			}
+			steps {
+				ansiColor('xterm') {
+					withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
+						sh "docker login -u '${duser}' -p '${dpass}'"
+						sh './scripts/buildx --push -t docker.io/jc21/${IMAGE}:node -f Dockerfile.node'
+					}
+				}
+			}
+		}
 		stage('Golang Build') {
 			when {
 				branch 'master'
