@@ -5,9 +5,5 @@ ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 
 RUN apk update \
-	&& apk add --update gcc g++ musl-dev make build-base git npm nodejs-current yarn wget \
+	&& apk add --update gcc g++ musl-dev make build-base git npm nodejs-current yarn \
 	&& rm -rf /var/cache/apk/*
-
-RUN wget https://dl.eff.org/certbot-auto \
-	&& mv certbot-auto /usr/local/bin/certbot-auto \
-	&& chmod 755 /usr/local/bin/certbot-auto
