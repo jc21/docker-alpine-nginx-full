@@ -22,6 +22,6 @@ docker buildx build \
 	$@ \
 	.
 
-docker buildx rm "${BUILDX_NAME:-npm}"
+docker buildx rm "${BUILDX_NAME:-alpine-nginx-full}"
 
 echo -e "${BLUE}❯ ${GREEN}Multiarch build Complete${RESET}"
