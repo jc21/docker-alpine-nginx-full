@@ -8,7 +8,7 @@ ENV NGINX_VERSION=1.17.8
 RUN apk update \
 	&& update-ca-certificates \
 	&& apk add --no-cache --upgrade bash curl ncurses openssl \
-	&& apk add --update gcc g++ musl-dev make pcre pcre-dev openssl-dev zlib-dev figlet zlib \
+	&& apk add --update gcc g++ musl-dev make pcre pcre-dev openssl-dev zlib-dev figlet zlib apache2-utils tzdata \
 	&& apk add build-base git npm nodejs-current yarn \
 	&& rm -rf /var/cache/apk/*
 
