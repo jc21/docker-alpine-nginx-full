@@ -2,7 +2,7 @@ FROM alpine:latest as builder
 
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
-ENV NGINX_VERSION=1.17.8
+ENV NGINX_VERSION=1.17.10
 
 RUN apk update
 RUN apk add --no-cache --upgrade bash curl ncurses openssl
@@ -20,7 +20,7 @@ RUN /tmp/build-nginx
 FROM alpine:latest
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
-ENV NGINX_VERSION=1.17.8
+ENV NGINX_VERSION=1.17.10
 
 RUN apk update \
 	&& apk add curl bash figlet ncurses openssl pcre zlib apache2-utils tzdata \
