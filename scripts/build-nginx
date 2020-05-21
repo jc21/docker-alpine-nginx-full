@@ -52,8 +52,7 @@ cd /tmp/nginx
 	--with-stream \
 	--with-stream_realip_module \
 	--with-stream_ssl_module \
-	--with-stream_ssl_preread_module \
-	--with-ipv6
+	--with-stream_ssl_preread_module
 
 make
 
