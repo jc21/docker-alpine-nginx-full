@@ -21,7 +21,7 @@ pipeline {
 					}
 					steps {
 						script {
-							env.BUILDX_PUSH_TAGS        = "-t docker.io/jc21/${IMAGE}:latest"
+							env.BUILDX_PUSH_TAGS        = "-t docker.io/jc21/${IMAGE}:latest -t ${BUILDX_NAME}"
 							env.BUILDX_PUSH_TAGS_NODE   = "-t docker.io/jc21/${IMAGE}:node"
 							env.BUILDX_PUSH_TAGS_GOLANG = "-t docker.io/jc21/${IMAGE}:golang"
 						}
@@ -36,7 +36,7 @@ pipeline {
 					steps {
 						script {
 							// Defaults to the Branch name, which is applies to all branches AND pr's
-							env.BUILDX_PUSH_TAGS        = "-t docker.io/jc21/${IMAGE}:github-${BRANCH_LOWER}"
+							env.BUILDX_PUSH_TAGS        = "-t docker.io/jc21/${IMAGE}:github-${BRANCH_LOWER} -t ${BUILDX_NAME}"
 							env.BUILDX_PUSH_TAGS_NODE   = "${BUILDX_PUSH_TAGS}-node"
 							env.BUILDX_PUSH_TAGS_GOLANG = "${BUILDX_PUSH_TAGS}-golang"
 						}
@@ -52,19 +52,25 @@ pipeline {
 				}
 			}
 		}
-		stage('Node Build') {
-			steps {
-				withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
-					sh "docker login -u '${duser}' -p '${dpass}'"
-					sh "./scripts/buildx --push -f Dockerfile.node ${BUILDX_PUSH_TAGS_NODE}"
+		stage('Other Builds') {
+			parallel {
+				stage('Golang') {
+					steps {
+						sh 'sed -i "s/BASE_DOCKER_IMAGE/${BUILDX_NAME}/g" Dockerfile.golang'
+						withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
+							sh "docker login -u '${duser}' -p '${dpass}'"
+							sh "./scripts/buildx --push -f Dockerfile.golang ${BUILDX_PUSH_TAGS_GOLANG}"
+						}
+					}
 				}
-			}
-		}
-		stage('Golang Build') {
-			steps {
-				withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
-					sh "docker login -u '${duser}' -p '${dpass}'"
-					sh "./scripts/buildx --push -f Dockerfile.golang ${BUILDX_PUSH_TAGS_GOLANG}"
+				stage('Node') {
+					steps {
+						sh 'sed -i "s/BASE_DOCKER_IMAGE/${BUILDX_NAME}/g" Dockerfile.node'
+						withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
+							sh "docker login -u '${duser}' -p '${dpass}'"
+							sh "./scripts/buildx --push -f Dockerfile.node ${BUILDX_PUSH_TAGS_NODE}"
+						}
+					}
 				}
 			}
 		}
@@ -90,6 +96,9 @@ pipeline {
 		}
 	}
 	post {
+		always {
+			sh 'docker rmi -f ${BUILDX_NAME}'
+		}
 		success {
 			juxtapose event: 'success'
 			sh 'figlet "SUCCESS"'

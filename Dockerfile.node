@@ -1,4 +1,4 @@
-FROM --platform=${TARGETPLATFORM:-linux/amd64} jc21/alpine-nginx-full:latest
+FROM --platform=${TARGETPLATFORM:-linux/amd64} BASE_DOCKER_IMAGE
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
 ARG TARGETPLATFORM
