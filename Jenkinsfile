@@ -56,7 +56,7 @@ pipeline {
 			steps {
 				withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
 					sh "docker login -u '${duser}' -p '${dpass}'"
-					sh "./scripts/buildx --push -f Dockerfile.node ${BUILDX_PUSH_TAGS}"
+					sh "./scripts/buildx --push -f Dockerfile.node ${BUILDX_PUSH_TAGS_NODE}"
 				}
 			}
 		}
@@ -64,7 +64,7 @@ pipeline {
 			steps {
 				withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
 					sh "docker login -u '${duser}' -p '${dpass}'"
-					sh "./scripts/buildx --push -f Dockerfile.golang ${BUILDX_PUSH_TAGS}"
+					sh "./scripts/buildx --push -f Dockerfile.golang ${BUILDX_PUSH_TAGS_GOLANG}"
 				}
 			}
 		}
