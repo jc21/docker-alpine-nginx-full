@@ -57,17 +57,17 @@ pipeline {
 						}
 					}
 				}
-				stage('Golang') {
-					environment {
-						BUILDX_NAME  = "${IMAGE}_${GIT_BRANCH}_${BUILD_NUMBER}_golang"
-					}
-					steps {
-						withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
-							sh "docker login -u '${duser}' -p '${dpass}'"
-							sh "./scripts/buildx --push -f Dockerfile.golang ${BUILDX_PUSH_TAGS_GOLANG}"
-						}
-					}
-				}
+				// stage('Golang') {
+				// 	environment {
+				// 		BUILDX_NAME  = "${IMAGE}_${GIT_BRANCH}_${BUILD_NUMBER}_golang"
+				// 	}
+				// 	steps {
+				// 		withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
+				// 			sh "docker login -u '${duser}' -p '${dpass}'"
+				// 			sh "./scripts/buildx --push -f Dockerfile.golang ${BUILDX_PUSH_TAGS_GOLANG}"
+				// 		}
+				// 	}
+				// }
 			}
 		}
 		stage('Node Build') {
