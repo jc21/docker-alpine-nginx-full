@@ -6,10 +6,18 @@ YELLOW='\E[1;33m'
 GREEN='\E[1;32m'
 RESET='\E[0m'
 
-echo -e "${BLUE}❯ ${CYAN}Installing nginx ${YELLOW}${NGINX_VERSION}...${RESET}"
+echo -e "${BLUE}❯ ${CYAN}Installing OpenResty ${YELLOW}${NGINX_VERSION}...${RESET}"
 
 cd /tmp/nginx
 make install
 rm -rf /tmp/nginx
 
-echo -e "${BLUE}❯ ${GREEN}Nginx install completed${RESET}"
+echo -e "${BLUE}❯ ${GREEN}OpenResty install completed${RESET}"
+
+echo -e "${BLUE}❯ ${CYAN}Installing OpenResty plugins...${RESET}"
+
+cd /
+luarocks install lua-cjson
+luarocks install lua-resty-openidc
+
+echo -e "${BLUE}❯ ${GREEN}OpenResty plugins install completed${RESET}"
