@@ -3,21 +3,29 @@ LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
-ENV NGINX_VERSION=1.17.10
+ENV NGINX_VERSION=1.15.8.3
+# Note: OpenResty does not support Lua >= 5.2
+ENV LUA_VERSION=5.1.5
+ENV LUAROCKS_VERSION=3.3.1
 
 RUN apk update \
 	&& update-ca-certificates \
 	&& apk add --no-cache --upgrade bash curl ncurses openssl \
-	&& apk add --update gcc g++ musl-dev make pcre pcre-dev openssl-dev zlib-dev figlet zlib apache2-utils tzdata \
+	&& apk add --update gcc g++ musl-dev make pcre pcre-dev openssl-dev zlib-dev figlet zlib apache2-utils tzdata readline-dev perl unzip \
 	&& apk add build-base git npm nodejs-current yarn \
 	&& rm -rf /var/cache/apk/*
 
 ADD ./.bashrc /root/.bashrc
 
+# Lua build
+ADD ./scripts/build-lua /tmp/build-lua
+ADD ./scripts/install-lua /tmp/install-lua
+
 # Nginx build
 ADD ./scripts/build-nginx /tmp/build-nginx
 ADD ./scripts/install-nginx /tmp/install-nginx
-RUN /tmp/build-nginx && /tmp/install-nginx
+
+RUN /tmp/build-lua && /tmp/install-lua && /tmp/build-nginx && /tmp/install-nginx
 
 WORKDIR /root
 
