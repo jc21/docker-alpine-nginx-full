@@ -14,8 +14,8 @@ ADD ./scripts/build-lua /tmp/build-lua
 RUN /tmp/build-lua
 
 # Nginx build
-ADD ./scripts/build-nginx /tmp/build-nginx
-RUN /tmp/build-nginx
+ADD ./scripts/build-openresty /tmp/build-openresty
+RUN /tmp/build-openresty
 
 #############
 # Final Image
@@ -37,12 +37,12 @@ COPY --from=builder /tmp/lua /tmp/lua
 COPY --from=builder /tmp/luarocks /tmp/luarocks
 ADD ./scripts/install-lua /tmp/install-lua
 
-# Copy nginx build from first image
-COPY --from=builder /tmp/nginx /tmp/nginx
-ADD ./scripts/install-nginx /tmp/install-nginx
+# Copy openresty build from first image
+COPY --from=builder /tmp/openresty /tmp/openresty
+ADD ./scripts/install-openresty /tmp/install-openresty
 
 RUN /tmp/install-lua \
-	&& /tmp/install-nginx \
+	&& /tmp/install-openresty \
 	&& rm -f /tmp/install-lua \
-	&& rm -f /tmp/install-nginx \
+	&& rm -f /tmp/install-openresty \
 	&& apk del make
