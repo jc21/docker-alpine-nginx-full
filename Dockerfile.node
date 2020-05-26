@@ -1,8 +1,8 @@
-FROM --platform=${TARGETPLATFORM:-linux/amd64} jc21/alpine-nginx-full:BASE_TAG
-LABEL maintainer="Jamie Curnow <jc@jc21.com>"
+# Note this is a default, gets overwritten by docker build command
+ARG TARGETPLATFORM=linux/amd64
 
-ARG TARGETPLATFORM
-ARG BUILDPLATFORM
+FROM --platform=${TARGETPLATFORM} jc21/alpine-nginx-full:BASE_TAG
+LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
 RUN apk update \
 	&& apk add --update gcc g++ musl-dev make build-base git npm nodejs-current yarn \

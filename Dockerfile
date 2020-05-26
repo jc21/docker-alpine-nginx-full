@@ -1,11 +1,8 @@
 FROM alpine:latest as builder
 
-ARG TARGETPLATFORM
-ARG BUILDPLATFORM
-ENV NGINX_VERSION=1.15.8.3
-# Note: OpenResty does not support Lua >= 5.2
-ENV LUA_VERSION=5.1.5
-ENV LUAROCKS_VERSION=3.3.1
+ARG OPENRESTY_VERSION
+ARG LUA_VERSION
+ARG LUAROCKS_VERSION
 
 RUN apk update
 RUN apk add --no-cache --upgrade bash curl ncurses openssl
@@ -27,11 +24,6 @@ RUN /tmp/build-nginx
 FROM alpine:latest
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
-ENV NGINX_VERSION=1.15.8.3
-# Note: OpenResty does not support Lua >= 5.2
-ENV LUA_VERSION=5.1.5
-ENV LUAROCKS_VERSION=3.3.1
-
 # OpenResty uses LuaJIT which has a dependency on GCC
 RUN apk update \
 	&& apk add gcc musl-dev curl bash figlet ncurses openssl pcre zlib apache2-utils tzdata perl readline unzip \
@@ -50,7 +42,7 @@ COPY --from=builder /tmp/nginx /tmp/nginx
 ADD ./scripts/install-nginx /tmp/install-nginx
 
 RUN /tmp/install-lua \
-    && /tmp/install-nginx \
+	&& /tmp/install-nginx \
 	&& rm -f /tmp/install-lua \
 	&& rm -f /tmp/install-nginx \
 	&& apk del make

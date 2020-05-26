@@ -6,11 +6,11 @@ YELLOW='\E[1;33m'
 GREEN='\E[1;32m'
 RESET='\E[0m'
 
-echo -e "${BLUE}❯ ${CYAN}Installing OpenResty ${YELLOW}${NGINX_VERSION}...${RESET}"
+echo -e "${BLUE}❯ ${CYAN}Installing OpenResty ${YELLOW}${OPENRESTY_VERSION}...${RESET}"
 
-cd /tmp/nginx
+cd /tmp/openresty
 make install
-rm -rf /tmp/nginx
+rm -rf /tmp/openresty
 
 echo -e "${BLUE}❯ ${GREEN}OpenResty install completed${RESET}"
 
