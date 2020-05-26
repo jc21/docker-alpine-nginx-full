@@ -1,6 +1,3 @@
-# Note this is a default, gets overwritten by docker build command
-ARG TARGETPLATFORM=linux/amd64
-
 FROM --platform=${TARGETPLATFORM} golang:alpine as go
 FROM --platform=${TARGETPLATFORM} jc21/alpine-nginx-full:BASE_TAG
 
