@@ -1,7 +1,9 @@
 # alpine-nginx-full
 
 <p>
-  <img src="https://img.shields.io/badge/nginx-1.17.10-green.svg?style=for-the-badge">
+  <img src="https://img.shields.io/badge/openresty-1.15.8.3-green.svg?style=for-the-badge">
+  <img src="https://img.shields.io/badge/lua-5.1.5-green.svg?style=for-the-badge">
+  <img src="https://img.shields.io/badge/luarocks-3.3.1-green.svg?style=for-the-badge">
   <a href="https://hub.docker.com/repository/docker/jc21/alpine-nginx-full">
     <img src="https://img.shields.io/docker/stars/jc21/alpine-nginx-full.svg?style=for-the-badge">
   </a>

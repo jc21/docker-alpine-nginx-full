@@ -1,6 +1,6 @@
 pipeline {
 	agent {
-		label 'docker-multiarch'
+		label 'docker-multiarch-big'
 	}
 	options {
 		buildDiscarder(logRotator(numToKeepStr: '5'))
@@ -11,6 +11,10 @@ pipeline {
 		IMAGE        = 'alpine-nginx-full'
 		BUILDX_NAME  = "${IMAGE}_${GIT_BRANCH}_${BUILD_NUMBER}"
 		BRANCH_LOWER = "${BRANCH_NAME.toLowerCase().replaceAll('/', '-')}"
+		// Software versions; OpenResty does not support Lua >= 5.2
+		OPENRESTY_VERSION = '1.15.8.3'
+		LUA_VERSION       = '5.1.5'
+		LUAROCKS_VERSION  = '3.3.1'
 	}
 	stages {
 		stage('Environment') {

@@ -1,5 +1,5 @@
-FROM --platform=${TARGETPLATFORM:-linux/amd64} golang:alpine as go
-FROM --platform=${TARGETPLATFORM:-linux/amd64} jc21/alpine-nginx-full:BASE_TAG
+FROM --platform=${TARGETPLATFORM} golang:alpine as go
+FROM --platform=${TARGETPLATFORM} jc21/alpine-nginx-full:BASE_TAG
 
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
@@ -9,7 +9,7 @@ ARG BUILDPLATFORM
 RUN apk update \
 	&& update-ca-certificates \
 	&& apk add --no-cache --upgrade bash curl ncurses openssl \
-	&& apk add --update gcc g++ musl-dev make pcre pcre-dev openssl-dev zlib-dev figlet zlib apache2-utils tzdata \
+	&& apk add --update gcc g++ musl-dev make pcre pcre-dev openssl-dev zlib-dev figlet zlib apache2-utils tzdata readline-dev perl unzip \
 	&& apk add build-base git npm nodejs-current yarn \
 	&& rm -rf /var/cache/apk/*
 
