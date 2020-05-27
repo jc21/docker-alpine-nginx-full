@@ -24,6 +24,10 @@ RUN /tmp/build-openresty
 FROM alpine:latest
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
+# Env var for bashrc
+ARG OPENRESTY_VERSION
+ENV OPENRESTY_VERSION=${OPENRESTRY_VERSION}
+
 # OpenResty uses LuaJIT which has a dependency on GCC
 RUN apk update \
 	&& apk add gcc musl-dev curl bash figlet ncurses openssl pcre zlib apache2-utils tzdata perl readline unzip \
