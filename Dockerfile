@@ -26,7 +26,7 @@ LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
 # Env var for bashrc
 ARG OPENRESTY_VERSION
-ENV OPENRESTY_VERSION=${OPENRESTRY_VERSION}
+ENV OPENRESTY_VERSION=${OPENRESTY_VERSION}
 
 # OpenResty uses LuaJIT which has a dependency on GCC
 RUN apk update \
