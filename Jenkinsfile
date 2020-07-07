@@ -52,7 +52,7 @@ pipeline {
 		}
 		stage('Base Build') {
 			environment {
-				BUILDX_NAME = "${IMAGE}_${GIT_BRANCH}_${BUILD_NUMBER}_base"
+				BUILDX_NAME = "${IMAGE}_${GIT_BRANCH}_base"
 			}
 			steps {
 				withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
@@ -65,7 +65,7 @@ pipeline {
 			parallel {
 				stage('Golang') {
 					environment {
-						BUILDX_NAME  = "${IMAGE}_${GIT_BRANCH}_${BUILD_NUMBER}_golang"
+						BUILDX_NAME  = "${IMAGE}_${GIT_BRANCH}_golang"
 					}
 					steps {
 						sh 'sed -i "s/BASE_TAG/${BASE_TAG}/g" Dockerfile.golang'
@@ -77,7 +77,7 @@ pipeline {
 				}
 				stage('Node') {
 					environment {
-						BUILDX_NAME  = "${IMAGE}_${GIT_BRANCH}_${BUILD_NUMBER}_node"
+						BUILDX_NAME  = "${IMAGE}_${GIT_BRANCH}_node"
 					}
 					steps {
 						sh 'sed -i "s/BASE_TAG/${BASE_TAG}/g" Dockerfile.node'
