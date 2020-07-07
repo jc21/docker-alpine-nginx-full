@@ -9,7 +9,7 @@ pipeline {
 	}
 	environment {
 		IMAGE        = 'alpine-nginx-full'
-		BUILDX_NAME  = "${IMAGE}_${GIT_BRANCH}_${BUILD_NUMBER}"
+		BUILDX_NAME  = "${IMAGE}_${GIT_BRANCH}"
 		BRANCH_LOWER = "${BRANCH_NAME.toLowerCase().replaceAll('/', '-')}"
 		// Software versions; OpenResty does not support Lua >= 5.2
 		OPENRESTY_VERSION = '1.15.8.3'
@@ -52,7 +52,7 @@ pipeline {
 		}
 		stage('Base Build') {
 			environment {
-				BUILDX_NAME  = "${IMAGE}_${GIT_BRANCH}_${BUILD_NUMBER}_base"
+				BUILDX_NAME = "${IMAGE}_${GIT_BRANCH}_${BUILD_NUMBER}_base"
 			}
 			steps {
 				withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
