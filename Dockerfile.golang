@@ -1,27 +1,28 @@
-FROM --platform=${TARGETPLATFORM:-linux/amd64} golang:1.15.2-alpine
+FROM --platform=${TARGETPLATFORM} golang:alpine as go
+FROM --platform=${TARGETPLATFORM} jc21/alpine-nginx-full:BASE_TAG
+
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
-ENV NGINX_VERSION=1.17.8
 
 RUN apk update \
 	&& update-ca-certificates \
 	&& apk add --no-cache --upgrade bash curl ncurses openssl \
-	&& apk add --update gcc g++ musl-dev make pcre pcre-dev openssl-dev zlib-dev figlet zlib apache2-utils tzdata \
-	&& apk add build-base git npm nodejs-current yarn \
+	&& apk add --update gcc g++ musl-dev make pcre pcre-dev openssl-dev zlib-dev figlet zlib apache2-utils tzdata readline-dev perl unzip \
+	&& apk add build-base git npm nodejs yarn \
 	&& rm -rf /var/cache/apk/*
 
-ADD ./.bashrc /root/.bashrc
+# copy go from golang
+COPY --from=go /usr/local/go /usr/local/go
 
-# Nginx build
-ADD ./scripts/build-nginx /tmp/build-nginx
-ADD ./scripts/install-nginx /tmp/install-nginx
-RUN /tmp/build-nginx && /tmp/install-nginx
+ENV GOPATH=/opt/go PATH="/usr/local/go/bin:$PATH:/opt/go/bin"
+RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" \
+	&& chmod -R 777 "$GOPATH" \
+	&& echo "====> ${TARGETPLATFORM}: $(go version)"
 
 WORKDIR /root
 
 # Gotools
-RUN echo "TARGETPLATFORM is: $TARGETPLATFORM"
-RUN if [ "$TARGETPLATFORM" == "" ] || [ "$TARGETPLATFORM" == "linux/amd64" ]; then cd /usr && wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.21.0; fi
+RUN if [ "$TARGETPLATFORM" == "" ] || [ "$TARGETPLATFORM" == "linux/amd64" ]; then cd /usr && wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.27.0; fi
 RUN go get -u github.com/kyoh86/richgo

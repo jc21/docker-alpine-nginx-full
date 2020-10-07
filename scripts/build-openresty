@@ -6,13 +6,13 @@ YELLOW='\E[1;33m'
 GREEN='\E[1;32m'
 RESET='\E[0m'
 
-echo -e "${BLUE}❯ ${CYAN}Building nginx ${YELLOW}${NGINX_VERSION}...${RESET}"
+echo -e "${BLUE}❯ ${CYAN}Building OpenResty ${YELLOW}${OPENRESTY_VERSION}...${RESET}"
 
 cd /tmp
-wget "http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz"
-tar -xzf nginx-${NGINX_VERSION}.tar.gz
-mv /tmp/nginx-${NGINX_VERSION} /tmp/nginx
-cd /tmp/nginx
+wget "https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz"
+tar -xzf openresty-${OPENRESTY_VERSION}.tar.gz
+mv /tmp/openresty-${OPENRESTY_VERSION} /tmp/openresty
+cd /tmp/openresty
 
 ./configure \
 	--prefix=/etc/nginx \
@@ -52,9 +52,8 @@ cd /tmp/nginx
 	--with-stream \
 	--with-stream_realip_module \
 	--with-stream_ssl_module \
-	--with-stream_ssl_preread_module \
-	--with-ipv6
+	--with-stream_ssl_preread_module
 
-make
+make -j2
 
-echo -e "${BLUE}❯ ${GREEN}Nginx build completed${RESET}"
+echo -e "${BLUE}❯ ${GREEN}OpenResty build completed${RESET}"
