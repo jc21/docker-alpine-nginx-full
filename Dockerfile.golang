@@ -1,4 +1,4 @@
-FROM --platform=${TARGETPLATFORM:-linux/amd64} golang:1.13.5-alpine
+FROM --platform=${TARGETPLATFORM:-linux/amd64} golang:1.15.2-alpine
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
 ARG TARGETPLATFORM
