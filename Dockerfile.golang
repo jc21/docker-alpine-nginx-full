@@ -1,5 +1,5 @@
-FROM --platform=${TARGETPLATFORM} golang:alpine as go
-FROM --platform=${TARGETPLATFORM} jc21/alpine-nginx-full:BASE_TAG
+FROM --platform=${TARGETPLATFORM:-linux/amd64} golang:alpine as go
+FROM --platform=${TARGETPLATFORM:-linux/amd64} jc21/alpine-nginx-full:BASE_TAG
 
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
