@@ -5,9 +5,10 @@
 FROM --platform=${TARGETPLATFORM:-linux/amd64} golang:alpine as go
 
 ENV MKCERT_VERSION=1.4.2
-RUN apk add wget
+RUN apk update && apk add wget git gcc g++
 RUN mkdir /workspace
 WORKDIR /workspace
+RUN go get github.com/amacneil/dbmate
 RUN wget -O mkcert.tgz "https://github.com/FiloSottile/mkcert/archive/v${MKCERT_VERSION}.tar.gz"
 RUN tar -xzf mkcert.tgz
 WORKDIR "/workspace/mkcert-${MKCERT_VERSION}"
@@ -64,8 +65,9 @@ ADD ./scripts/install-lua /tmp/install-lua
 COPY --from=builder /tmp/openresty /tmp/openresty
 ADD ./scripts/install-openresty /tmp/install-openresty
 
-# Copy mkcert
+# Copy golang built packages
 COPY --from=go /bin/mkcert /bin/mkcert
+COPY --from=go /go/bin/dbmate /bin/dbmate
 
 RUN /tmp/install-lua \
 	&& /tmp/install-openresty \
