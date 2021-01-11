@@ -50,7 +50,7 @@ ENV OPENRESTY_VERSION=${OPENRESTY_VERSION}
 
 # OpenResty uses LuaJIT which has a dependency on GCC
 RUN apk update \
-	&& apk add gcc musl-dev curl bash figlet ncurses openssl pcre zlib apache2-utils tzdata perl readline unzip \
+	&& apk add gcc musl-dev curl bash figlet ncurses openssl pcre zlib apache2-utils tzdata perl readline unzip shadow \
 	&& apk add --update make \
 	&& rm -rf /var/cache/apk/*
 
