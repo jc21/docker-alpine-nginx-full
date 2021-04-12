@@ -55,8 +55,8 @@ pipeline {
 				BUILDX_NAME = "${IMAGE}_${GIT_BRANCH}_base"
 			}
 			steps {
-				withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
-					sh "docker login -u '${duser}' -p '${dpass}'"
+				withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
+					sh 'docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"'
 					sh "./scripts/buildx --push ${BUILDX_PUSH_TAGS}"
 				}
 			}
@@ -69,8 +69,8 @@ pipeline {
 					}
 					steps {
 						sh 'sed -i "s/BASE_TAG/${BASE_TAG}/g" Dockerfile.golang'
-						withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
-							sh "docker login -u '${duser}' -p '${dpass}'"
+						withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
+							sh 'docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"'
 							sh "./scripts/buildx --push -f Dockerfile.golang ${BUILDX_PUSH_TAGS_GOLANG}"
 						}
 					}
@@ -81,8 +81,8 @@ pipeline {
 					}
 					steps {
 						sh 'sed -i "s/BASE_TAG/${BASE_TAG}/g" Dockerfile.node'
-						withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
-							sh "docker login -u '${duser}' -p '${dpass}'"
+						withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
+							sh 'docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"'
 							sh "./scripts/buildx --push -f Dockerfile.node ${BUILDX_PUSH_TAGS_NODE}"
 						}
 					}
