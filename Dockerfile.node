@@ -1,6 +1,5 @@
 FROM --platform=${TARGETPLATFORM:-linux/amd64} jc21/alpine-nginx-full:BASE_TAG
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
-RUN apk update \
-	&& apk add --update python2 gcc g++ musl-dev make build-base git npm nodejs-current yarn \
+RUN apk add --no-cache python2 gcc g++ musl-dev make build-base git nodejs npm yarn \
 	&& rm -rf /var/cache/apk/*

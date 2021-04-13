@@ -6,11 +6,10 @@ LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 
-RUN apk update \
-	&& update-ca-certificates \
+RUN apk add --no-cache --upgrade update-ca-certificates \
 	&& apk add --no-cache --upgrade bash curl ncurses openssl \
-	&& apk add --update gcc g++ musl-dev make pcre pcre-dev openssl-dev zlib-dev figlet zlib apache2-utils tzdata readline-dev perl unzip \
-	&& apk add build-base git npm nodejs yarn \
+	&& apk add --no-cache gcc g++ musl-dev make pcre pcre-dev openssl-dev zlib-dev figlet zlib apache2-utils tzdata readline-dev perl unzip \
+	&& apk add --no-cache build-base git npm nodejs yarn \
 	&& rm -rf /var/cache/apk/*
 
 # copy go from golang

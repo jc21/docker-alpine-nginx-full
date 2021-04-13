@@ -24,10 +24,9 @@ ARG OPENRESTY_VERSION
 ARG LUA_VERSION
 ARG LUAROCKS_VERSION
 
-RUN apk update
 RUN apk add --no-cache --upgrade bash curl ncurses openssl
-RUN apk add --update gcc g++ musl-dev make pcre pcre-dev openssl-dev zlib-dev readline-dev perl
-RUN apk add build-base
+RUN apk add --no-cache gcc g++ musl-dev make pcre pcre-dev openssl-dev zlib-dev readline-dev perl
+RUN apk add --no-cache build-base
 
 # Lua build
 ADD ./scripts/build-lua /tmp/build-lua
@@ -41,7 +40,7 @@ RUN /tmp/build-openresty
 # Final Image
 #############
 
-FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine:latest
+FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine:3.13
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
 # Env var for bashrc
@@ -49,9 +48,8 @@ ARG OPENRESTY_VERSION
 ENV OPENRESTY_VERSION=${OPENRESTY_VERSION}
 
 # OpenResty uses LuaJIT which has a dependency on GCC
-RUN apk update \
-	&& apk add gcc musl-dev curl bash figlet ncurses openssl pcre zlib apache2-utils tzdata perl readline unzip shadow \
-	&& apk add --update make \
+RUN apk add --no-cache gcc musl-dev curl bash figlet ncurses openssl pcre zlib apache2-utils tzdata perl readline unzip shadow \
+	&& apk add --no-cache make \
 	&& rm -rf /var/cache/apk/*
 
 ADD ./.bashrc /root/.bashrc
