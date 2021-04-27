@@ -5,7 +5,7 @@
 FROM --platform=${TARGETPLATFORM:-linux/amd64} golang:alpine as go
 
 ENV MKCERT_VERSION=1.4.2
-RUN apk update && apk add wget git gcc g++
+RUN apk add --no-cache wget git gcc g++
 RUN mkdir /workspace
 WORKDIR /workspace
 RUN go get github.com/amacneil/dbmate
@@ -18,7 +18,7 @@ RUN go build -ldflags "-X main.Version=v${MKCERT_VERSION}" -o /bin/mkcert
 # Nginx Builder
 #############
 
-FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine:latest as builder
+FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine:3.12 as builder
 
 ARG OPENRESTY_VERSION
 ARG LUA_VERSION
@@ -40,17 +40,21 @@ RUN /tmp/build-openresty
 # Final Image
 #############
 
-FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine:3.13
+FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine:3.12
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
 # Env var for bashrc
 ARG OPENRESTY_VERSION
 ENV OPENRESTY_VERSION=${OPENRESTY_VERSION}
 
+RUN echo "Base: ${TARGETPLATFORM:-linux/amd64}" > /built-for-arch
+
 # OpenResty uses LuaJIT which has a dependency on GCC
 RUN apk add --no-cache gcc musl-dev curl bash figlet ncurses openssl pcre zlib apache2-utils tzdata perl readline unzip shadow \
 	&& apk add --no-cache make \
 	&& rm -rf /var/cache/apk/*
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ADD ./.bashrc /root/.bashrc
 

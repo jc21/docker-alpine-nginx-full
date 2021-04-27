@@ -19,12 +19,13 @@ docker buildx build \
 	--platform linux/amd64,linux/arm64,linux/arm/7 \
 	--progress plain \
 	--pull \
+	--build-arg BASE_TAG \
 	--build-arg OPENRESTY_VERSION \
 	--build-arg LUA_VERSION \
 	--build-arg LUAROCKS_VERSION \
 	$@ \
 	.
 
-#docker buildx rm "${BUILDX_NAME:-alpine-nginx-full}"
+docker buildx rm "${BUILDX_NAME:-alpine-nginx-full}"
 
 echo -e "${BLUE}❯ ${GREEN}Multiarch build Complete${RESET}"

@@ -1,6 +1,6 @@
 pipeline {
 	agent {
-		label 'docker-multiarch-big'
+		label 'docker-multiarch'
 	}
 	options {
 		buildDiscarder(logRotator(numToKeepStr: '5'))
@@ -68,7 +68,7 @@ pipeline {
 						BUILDX_NAME  = "${IMAGE}_${GIT_BRANCH}_golang"
 					}
 					steps {
-						sh 'sed -i "s/BASE_TAG/${BASE_TAG}/g" Dockerfile.golang'
+						// sh 'sed -i "s/BASE_TAG/${BASE_TAG}/g" Dockerfile.golang'
 						withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
 							sh 'docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"'
 							sh "./scripts/buildx --push -f Dockerfile.golang ${BUILDX_PUSH_TAGS_GOLANG}"
@@ -80,7 +80,7 @@ pipeline {
 						BUILDX_NAME  = "${IMAGE}_${GIT_BRANCH}_node"
 					}
 					steps {
-						sh 'sed -i "s/BASE_TAG/${BASE_TAG}/g" Dockerfile.node'
+						// sh 'sed -i "s/BASE_TAG/${BASE_TAG}/g" Dockerfile.node'
 						withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
 							sh 'docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"'
 							sh "./scripts/buildx --push -f Dockerfile.node ${BUILDX_PUSH_TAGS_NODE}"

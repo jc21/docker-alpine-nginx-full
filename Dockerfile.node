@@ -1,5 +1,12 @@
-FROM --platform=${TARGETPLATFORM:-linux/amd64} jc21/alpine-nginx-full:BASE_TAG
+FROM --platform=${TARGETPLATFORM:-linux/amd64} jc21/alpine-nginx-full:${BASE_TAG:-latest}
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 
-RUN apk add --no-cache python2 gcc g++ musl-dev make build-base git nodejs npm yarn \
+RUN echo "Node: ${TARGETPLATFORM:-linux/amd64}" >> /built-for-arch
+
+RUN apk add --no-cache python2 g++ build-base git nodejs-current npm yarn \
 	&& rm -rf /var/cache/apk/*
+
+# Check nodejs works on this architecture
+COPY test.js /tmp/test.js
+RUN node /tmp/test.js \
+	&& rm -f /tmp/test.js
