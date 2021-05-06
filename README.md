@@ -1,5 +1,9 @@
 # alpine-nginx-full
 
+**DEPRECATED**
+
+This project is now superceded by [jc21/docker-nginx-full](https://github.com/jc21/docker-nginx-full) which is no longer using alpine as the base.
+
 <p>
   <img src="https://img.shields.io/badge/openresty-1.19.3.1-green.svg?style=for-the-badge">
   <img src="https://img.shields.io/badge/lua-5.1.5-green.svg?style=for-the-badge">
